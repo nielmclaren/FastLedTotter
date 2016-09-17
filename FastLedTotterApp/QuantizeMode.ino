@@ -14,13 +14,14 @@ void setupQuantizeMode() {
 }
 
 void loopQuantizeMode() {
-  quantum = floor((1. + tilt) / 2. * numQuanta);
+  quantum = floor((1. + tilt) / 2. * (numQuanta + 1));
   debounceQuantumFlipFlop();
   quantumSwitched = quantum != prevQuantum;
 
   for (int i = 0; i < numLedsPerStrip; i++) {
     int ledQuantum = floor(i / quantumWidth);
-    if (quantumSwitched && isBetweenQuanta(ledQuantum, prevQuantum, quantum)) {
+    if (quantumSwitched && (ledQuantum == quantum ||
+          isBetweenQuanta(ledQuantum, prevQuantum, quantum))) {
       leds[i] = getQuantumColor();
     }
     else {
@@ -32,8 +33,8 @@ void loopQuantizeMode() {
 }
 
 bool isBetweenQuanta(int q, int start, int end) {
-  return start < end && start < q && q <= end
-    || end <= q && q < start;
+  return start < end && start < q && q < end
+    || end < q && q < start;
 }
 
 CRGB fadeToBlack(CRGB c, int rate) {
@@ -44,15 +45,15 @@ CRGB fadeToBlack(CRGB c, int rate) {
 }
 
 void debounceQuantumFlipFlop() {
-  if (prevQuantum != quantum) {
-    if (getQuantumError() < 0.2) {
-      quantum = prevQuantum;
-    }
+  if (prevQuantum != quantum
+      && abs(quantum - prevQuantum) == 1
+      && getQuantumError() < 0.2) {
+    quantum = prevQuantum;
   }
 }
 
 float getQuantumError() {
-  float x = fmod((1 + tilt) / 2 * numQuanta, 1);
+  float x = fmod((1 + tilt) / 2 * (numQuanta + 1), 1);
   return (float)min(x, 1 - x);
 }
 
