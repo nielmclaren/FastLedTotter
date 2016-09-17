@@ -1,12 +1,12 @@
 
 #include <math.h>
 
-const int quantumWidth = 16;
+const int quantumWidth = 32;
 const int numQuanta = ceil(numLedsPerStrip / quantumWidth);
 int quantum;
 int prevQuantum;
 bool quantumSwitched;
-const int quantumFadeRate = 2;
+const int quantumFadeRate = 3;
 
 void setupQuantizeMode() {
   quantum = -1;
