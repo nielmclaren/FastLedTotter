@@ -7,6 +7,8 @@ int quantum;
 int prevQuantum;
 int prevPrevQuantum;
 unsigned long quantumSwitchTime;
+bool quantumSwitched;
+const int quantumFadeRate = 2;
 
 void setupQuantizeMode() {
   quantum = -1;
@@ -20,25 +22,37 @@ void loopQuantizeMode() {
   debounceQuantumFlipFlop();
 
   for (int i = 0; i < numLedsPerStrip; i++) {
-    if (floor(i / quantumWidth) == quantum) {
-      leds[i] = getQuantumColor(millis() - quantumSwitchTime);
+    if (quantumSwitched && floor(i / quantumWidth) == quantum) {
+      leds[i] = getQuantumColor();
     }
     else {
-      leds[i] = CRGB::Black;
+      leds[i] = fadeToBlack(leds[i], quantumFadeRate);
     }
   }
+}
+
+CRGB fadeToBlack(CRGB c, int rate) {
+  return CRGB(
+      max(0, c.r - rate),
+      max(0, c.g - rate),
+      max(0, c.b - rate));
 }
 
 void debounceQuantumFlipFlop() {
   if (prevQuantum != quantum) {
     if (prevPrevQuantum == quantum && getQuantumError() < 0.2) {
       quantum = prevQuantum;
+      quantumSwitched = false;
     }
     else {
       quantumSwitchTime = millis();
+      quantumSwitched = true;
       prevPrevQuantum = prevQuantum;
       prevQuantum = quantum;
     }
+  }
+  else {
+    quantumSwitched = false;
   }
 }
 
@@ -47,14 +61,7 @@ float getQuantumError() {
   return (float)min(x, 1 - x);
 }
 
-CRGB getQuantumColor(unsigned long age) {
-  int x;
-  if (age < 200) {
-    x = map(age, 0, 200, 64, 0);
-  }
-  else {
-    x = 0;
-  }
-  return CHSV((millis() / 1000 * 4) % 255, 255, x);
+CRGB getQuantumColor() {
+  return CHSV((millis() / 1000 * 4) % 255, 255, 64);
 }
 
