@@ -5,30 +5,35 @@ const int quantumWidth = 16;
 const int numQuanta = ceil(numLedsPerStrip / quantumWidth);
 int quantum;
 int prevQuantum;
-int prevPrevQuantum;
-unsigned long quantumSwitchTime;
 bool quantumSwitched;
 const int quantumFadeRate = 2;
 
 void setupQuantizeMode() {
   quantum = -1;
   prevQuantum = -1;
-  prevPrevQuantum = -1;
-  quantumSwitchTime = 0;
 }
 
 void loopQuantizeMode() {
   quantum = floor((1. + tilt) / 2. * numQuanta);
   debounceQuantumFlipFlop();
+  quantumSwitched = quantum != prevQuantum;
 
   for (int i = 0; i < numLedsPerStrip; i++) {
-    if (quantumSwitched && floor(i / quantumWidth) == quantum) {
+    int ledQuantum = floor(i / quantumWidth);
+    if (quantumSwitched && isBetweenQuanta(ledQuantum, prevQuantum, quantum)) {
       leds[i] = getQuantumColor();
     }
     else {
       leds[i] = fadeToBlack(leds[i], quantumFadeRate);
     }
   }
+
+  prevQuantum = quantum;
+}
+
+bool isBetweenQuanta(int q, int start, int end) {
+  return start < end && start < q && q <= end
+    || end <= q && q < start;
 }
 
 CRGB fadeToBlack(CRGB c, int rate) {
@@ -40,19 +45,9 @@ CRGB fadeToBlack(CRGB c, int rate) {
 
 void debounceQuantumFlipFlop() {
   if (prevQuantum != quantum) {
-    if (prevPrevQuantum == quantum && getQuantumError() < 0.2) {
+    if (getQuantumError() < 0.2) {
       quantum = prevQuantum;
-      quantumSwitched = false;
     }
-    else {
-      quantumSwitchTime = millis();
-      quantumSwitched = true;
-      prevPrevQuantum = prevQuantum;
-      prevQuantum = quantum;
-    }
-  }
-  else {
-    quantumSwitched = false;
   }
 }
 
