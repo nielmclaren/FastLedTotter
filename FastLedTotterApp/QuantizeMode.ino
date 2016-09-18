@@ -6,7 +6,7 @@ const int numQuanta = ceil(numLedsPerStrip / quantumWidth);
 int quantum = -1;
 int prevQuantum = -1;
 bool quantumSwitched = false;
-const int quantumFadeRate = 3;
+const int quantumFadeRate = floor((float)globalLightness / 20);
 
 void loopQuantizeMode() {
   quantum = floor((1. + tilt) / 2. * (numQuanta + 1));
@@ -46,6 +46,6 @@ float getQuantumError() {
 }
 
 CRGB getQuantumColor() {
-  return CHSV((millis() / 1000 * 4) % 255, 255, 64);
+  return CHSV((millis() / 1000 * 4) % 255, globalSaturation, globalLightness);
 }
 
