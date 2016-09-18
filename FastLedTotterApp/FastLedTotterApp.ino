@@ -26,7 +26,8 @@ void loop() {
   updateTiltMoveDirection();
   updateSwitching();
 
-  loopQuantizeMode();
+  //loopQuantizeMode();
+  loopBeamMode();
 
   FastLED.show();
   delay(2);
