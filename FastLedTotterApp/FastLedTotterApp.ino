@@ -27,9 +27,32 @@ void loop() {
   updateSwitching();
 
   //loopQuantizeMode();
-  loopBeamMode();
+  //loopBeamMode();
+  loopLevelMode();
 
   FastLED.show();
   delay(2);
 }
 
+float modTime(long period) {
+  return (float)(millis() % period) / period;
+}
+
+float clampTime(float t) {
+  while (t >= 1) {
+    t -= 1;
+  }
+  while (t < 0) {
+    t += 1;
+  }
+  return t;
+}
+
+float splitTime(float t) {
+  if (t < 0.5) {
+    return 2.0 * t;
+  }
+  else {
+    return (1.0 - t) * 2.0;
+  }
+}
