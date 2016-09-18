@@ -11,13 +11,12 @@ const int globalLightness = 64;
 bool leftButtonDebouncer = false;
 bool rightButtonDebouncer = false;
 
-int mode = 0;
+const int numModes = 3;
+const int MODE_QUANTIZE = 0;
+const int MODE_BEAM = 1;
+const int MODE_LEVEL = 2;
 
-#define MODE_TEST -1
-#define MODE_IDLE 0
-#define MODE_QUANTIZE 1
-#define MODE_BEAM 2
-#define MODE_LEVEL 3
+int mode = MODE_QUANTIZE;
 
 void setup() {
   Serial.begin(9600);
@@ -68,23 +67,19 @@ void updateButtonHandlers() {
 }
 
 void leftButtonHandler() {
-  if (--mode < 1) {
-    mode = 3;
+  if (--mode < 0) {
+    mode = numModes - 1;
   }
 }
 
 void rightButtonHandler() {
-  if (++mode > 3) {
-    mode = 1;
+  if (++mode >= numModes) {
+    mode = 0;
   }
 }
 
 void loopMode() {
   switch (mode) {
-    case MODE_TEST:
-      break;
-    case MODE_IDLE:
-      break;
     case MODE_QUANTIZE:
       loopQuantizeMode();
       break;
@@ -94,6 +89,15 @@ void loopMode() {
     case MODE_LEVEL:
       loopLevelMode();
       break;
+  }
+
+  for (int i = 0; i < 10; i++) {
+    if (mode == i) {
+      CircuitPlayground.setPixelColor(i, CircuitPlayground.colorWheel(25 * i));
+    }
+    else {
+      CircuitPlayground.setPixelColor(i, 0x000000);
+    }
   }
 }
 
