@@ -16,8 +16,6 @@ void setup() {
 
   FastLED.addLeds<NEOPIXEL, 6>(leds, numLedsPerStrip);
   FastLED.addLeds<NEOPIXEL, 9>(leds, numLedsPerStrip);
-
-  setupQuantizeMode();
 }
 
 void loop() {

@@ -3,15 +3,10 @@
 
 const int quantumWidth = 32;
 const int numQuanta = ceil(numLedsPerStrip / quantumWidth);
-int quantum;
-int prevQuantum;
-bool quantumSwitched;
+int quantum = -1;
+int prevQuantum = -1;
+bool quantumSwitched = false;
 const int quantumFadeRate = 3;
-
-void setupQuantizeMode() {
-  quantum = -1;
-  prevQuantum = -1;
-}
 
 void loopQuantizeMode() {
   quantum = floor((1. + tilt) / 2. * (numQuanta + 1));
