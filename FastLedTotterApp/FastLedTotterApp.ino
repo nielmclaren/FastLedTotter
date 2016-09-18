@@ -6,15 +6,15 @@ const int numLedsPerStrip = 300;
 CRGB leds[numLedsPerStrip];
 
 const int globalSaturation = 255;
-const int globalLightness = 64;
+const int globalLightness = 255;
 
 bool leftButtonDebouncer = false;
 bool rightButtonDebouncer = false;
 
-const int numModes = 3;
+const int numModes = 2;
 const int MODE_QUANTIZE = 0;
 const int MODE_BEAM = 1;
-const int MODE_LEVEL = 2;
+const int modeDuration = 273000;
 
 int mode = MODE_QUANTIZE;
 
@@ -79,15 +79,14 @@ void rightButtonHandler() {
 }
 
 void loopMode() {
+  mode = (int)((float)millis() / modeDuration) % numModes;
+
   switch (mode) {
     case MODE_QUANTIZE:
       loopQuantizeMode();
       break;
     case MODE_BEAM:
       loopBeamMode();
-      break;
-    case MODE_LEVEL:
-      loopLevelMode();
       break;
   }
 

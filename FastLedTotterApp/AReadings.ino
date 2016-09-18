@@ -24,7 +24,7 @@ unsigned long prevSwitchTime = 0;
 
 
 void updateTilt() {
-  tilt = constrain(CircuitPlayground.motionX() / maxTilt, -1, 1);
+  tilt = constrain(CircuitPlayground.motionY() / maxTilt, -1, 1);
 }
 
 void updateTiltDirection() {
