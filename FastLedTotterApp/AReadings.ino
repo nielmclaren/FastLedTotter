@@ -81,3 +81,10 @@ void updateSwitching() {
   }
 }
 
+CRGB fadeToBlack(CRGB c, int rate) {
+  return CRGB(
+      max(0, c.r - rate),
+      max(0, c.g - rate),
+      max(0, c.b - rate));
+}
+

@@ -32,13 +32,6 @@ bool isBetweenQuanta(int q, int start, int end) {
     || end < q && q < start;
 }
 
-CRGB fadeToBlack(CRGB c, int rate) {
-  return CRGB(
-      max(0, c.r - rate),
-      max(0, c.g - rate),
-      max(0, c.b - rate));
-}
-
 void debounceQuantumFlipFlop() {
   if (prevQuantum != quantum
       && abs(quantum - prevQuantum) == 1
