@@ -8,7 +8,7 @@ int forwardBeamPositions[maxBeams];
 int backwardBeamPositions[maxBeams];
 const int beamWidth = 16;
 const int flashWidth = 4;
-const int beamSpeed = 4;
+const int beamSpeed = 6;
 int prevBeamCreatedDirection = 0;
 const CRGB combinedBeamColor = 0x663366;
 const CRGB forwardBeamColor = CHSV(120, globalSaturation, globalLightness);
@@ -129,5 +129,12 @@ CRGB getBeamModeColor(int led) {
     return backwardBeamColor;
   }
 
-  return CRGB::Black;
+  return getBeamBackgroundColor(led);
+}
+
+CRGB getBeamBackgroundColor(int led) {
+  float t = modTime(3000);
+  t -= 4.5 * abs(led - numLedsPerStrip/2) / numLedsPerStrip;
+  t = splitTime(clampTime(t));
+  return CHSV(180, globalSaturation, mapf(t, 0, 1, 32, globalLightness / 3));
 }

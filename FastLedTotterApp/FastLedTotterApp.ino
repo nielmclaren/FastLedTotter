@@ -2,10 +2,10 @@
 #include <Adafruit_CircuitPlayground.h>
 #include <FastLED.h>
 
-const int numLedsPerStrip = 300;
+const int numLedsPerStrip = 221;
 CRGB leds[numLedsPerStrip];
 
-const int globalSaturation = 255;
+const int globalSaturation = 192;
 const int globalLightness = 255;
 
 bool leftButtonDebouncer = false;
@@ -14,7 +14,7 @@ bool rightButtonDebouncer = false;
 const int numModes = 2;
 const int MODE_QUANTIZE = 0;
 const int MODE_BEAM = 1;
-const int modeDuration = 273000;
+const unsigned long modeDuration = 273000;
 
 int mode = MODE_QUANTIZE;
 
@@ -79,7 +79,8 @@ void rightButtonHandler() {
 }
 
 void loopMode() {
-  mode = (int)((float)millis() / modeDuration) % numModes;
+  mode = (millis() / modeDuration) % numModes;
+  Serial.println(mode);
 
   switch (mode) {
     case MODE_QUANTIZE:

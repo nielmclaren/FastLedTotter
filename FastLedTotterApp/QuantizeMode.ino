@@ -8,6 +8,8 @@ int prevQuantum = -1;
 bool quantumSwitched = false;
 const int quantumFadeRate = floor((float)globalLightness / 20);
 
+const int sparkleProbability = 3;
+
 void loopQuantizeMode() {
   quantum = floor((1. + tilt) / 2. * (numQuanta + 1));
   debounceQuantumFlipFlop();
@@ -18,6 +20,10 @@ void loopQuantizeMode() {
     if (quantumSwitched && (ledQuantum == quantum ||
           isBetweenQuanta(ledQuantum, prevQuantum, quantum))) {
       leds[i] = getQuantumColor();
+    }
+    else if (random(1000) < sparkleProbability) {
+      int v = random(255);
+      leds[i] = CRGB(v, v, v);
     }
     else {
       leds[i] = fadeToBlack(leds[i], quantumFadeRate);
