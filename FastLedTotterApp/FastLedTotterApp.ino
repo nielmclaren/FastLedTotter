@@ -36,11 +36,14 @@ void loop() {
   updateTiltMoveDirection();
   updateSwitching();
 
+  updateSerial();
+
   updateButtonHandlers();
 
   loopMode();
 
   FastLED.show();
+
   delay(2);
 }
 
@@ -80,7 +83,6 @@ void rightButtonHandler() {
 
 void loopMode() {
   mode = (millis() / modeDuration) % numModes;
-  Serial.println(mode);
 
   switch (mode) {
     case MODE_QUANTIZE:
