@@ -81,17 +81,6 @@ void updateSwitching() {
   }
 }
 
-void updateSerial() {
-  if (isSwitching) {
-    if (tiltDirection > 0) {
-      Serial.println('a');
-    }
-    else {
-      Serial.println('b');
-    }
-  }
-}
-
 CRGB fadeToBlack(CRGB c, int rate) {
   return CRGB(
       max(0, c.r - rate),

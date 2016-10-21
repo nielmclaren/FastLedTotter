@@ -8,13 +8,14 @@ int forwardBeamPositions[maxBeams];
 int backwardBeamPositions[maxBeams];
 const int beamWidth = 16;
 const int flashWidth = 4;
-const int beamSpeed = 6;
+const int beamSpeed = 12;
 int prevBeamCreatedDirection = 0;
 const CRGB combinedBeamColor = 0x663366;
 const CRGB forwardBeamColor = CHSV(120, globalSaturation, globalLightness);
 const CRGB forwardFiringColor = 0x999999;
 const CRGB backwardBeamColor = CHSV(240, globalSaturation, globalLightness);
 const CRGB backwardFiringColor = 0x999999;
+boolean poweredUp = false;
 
 void loopBeamMode() {
   stepBeams();
@@ -27,6 +28,25 @@ void loopBeamMode() {
 
   for (int i = 0; i < numLedsPerStrip; i++) {
      leds[i] = getBeamModeColor(i);
+  }
+
+  if (millis() - prevModeChangeTime > 30000) {
+    if (!poweredUp) {
+      Serial.println('b');
+      poweredUp = true;
+    }
+  }
+  else {
+    poweredUp = false;
+  }
+
+  if (isSwitching) {
+    if (poweredUp) {
+      Serial.println('c');
+    }
+    else {
+      Serial.println('a');
+    }
   }
 }
 

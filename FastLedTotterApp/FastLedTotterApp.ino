@@ -14,9 +14,11 @@ bool rightButtonDebouncer = false;
 const int numModes = 2;
 const int MODE_QUANTIZE = 0;
 const int MODE_BEAM = 1;
-const unsigned long modeDuration = 273000;
+const unsigned long modeDuration = 40000; //273000;
 
 int mode = MODE_QUANTIZE;
+int prevMode = -1;
+unsigned long prevModeChangeTime;
 
 void setup() {
   Serial.begin(9600);
@@ -26,6 +28,8 @@ void setup() {
 
   FastLED.addLeds<NEOPIXEL, 6>(leds, numLedsPerStrip);
   FastLED.addLeds<NEOPIXEL, 9>(leds, numLedsPerStrip);
+
+  prevModeChangeTime = millis();
 }
 
 void loop() {
@@ -35,8 +39,6 @@ void loop() {
   updateTiltAverage();
   updateTiltMoveDirection();
   updateSwitching();
-
-  updateSerial();
 
   updateButtonHandlers();
 
@@ -83,6 +85,10 @@ void rightButtonHandler() {
 
 void loopMode() {
   mode = (millis() / modeDuration) % numModes;
+  if (mode != prevMode) {
+    prevModeChangeTime = millis();
+    prevMode = mode;
+  }
 
   switch (mode) {
     case MODE_QUANTIZE:

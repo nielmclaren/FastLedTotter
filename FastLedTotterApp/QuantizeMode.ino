@@ -30,6 +30,10 @@ void loopQuantizeMode() {
     }
   }
 
+  if (isSwitching) {
+    Serial.println('d');
+  }
+
   prevQuantum = quantum;
 }
 
