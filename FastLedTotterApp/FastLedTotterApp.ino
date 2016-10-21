@@ -14,7 +14,7 @@ bool rightButtonDebouncer = false;
 const int numModes = 2;
 const int MODE_QUANTIZE = 0;
 const int MODE_BEAM = 1;
-const unsigned long modeDuration = 40000; //273000;
+const unsigned long modeDuration = 273000;
 
 int mode = MODE_QUANTIZE;
 int prevMode = -1;
